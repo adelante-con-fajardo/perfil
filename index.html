@@ -112,6 +112,24 @@
         }
         button#downloadBtn:hover { background-color: #132759; }
         button#downloadBtn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        /* ESTILOS DEL CRÉDITO */
+        .credits {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+        .credits a {
+            color: #1B3679;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .credits a:hover {
+            color: #DC2329;
+            text-decoration: underline;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -138,6 +156,10 @@
             </div>
             <button id="downloadBtn" disabled>DESCARGAR IMAGEN</button>
         </div>
+
+        <div class="credits">
+            Creado por: <a href="https://www.instagram.com/andres_santage" target="_blank">@andres_santage</a>
+        </div>
     </div>
 
     <script>
@@ -147,7 +169,6 @@
         const photoScaleSlider = document.getElementById('photoScale');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        // === CONFIGURACIÓN DEL MARCO ===
         const config = {
             colorYellow: "#FCCC0A",
             colorBlue: "#1B3679",
@@ -155,9 +176,9 @@
             topText: "CAMBIO. SERIO. SEGURO.",
             bottomText: "FAJARDO PRESIDENTE",
             canvasSize: 770,
-            pathRadius: 320,  // Radio central de la franja ancha
-            strokeWidth: 80,  // Grosor de la franja principal
-            fontSize: 64,      // Tamaño de letra ajustado
+            pathRadius: 320,
+            strokeWidth: 80,
+            fontSize: 64,
             fontFamily: "'Bebas Neue', Impact, sans-serif"
         };
 
@@ -173,9 +194,9 @@
             const cy = size / 2;
             const r = config.pathRadius;
 
-            // Tipografía que más se parece a la imagen: Impact o Franklin Gothic
+            // He vuelto a poner el font-weight en 900 para que se vea como el logo original
             const fontStack = "Impact, 'Arial Narrow', sans-serif-condensed, sans-serif";
-//const fontStack = "'Bebas Neue', Impact, sans-serif";
+            
             const svgString = `
             <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
                 <defs>
@@ -184,7 +205,7 @@
                         <stop offset="50%" stop-color="${config.colorYellow}"/>
                         <stop offset="50%" stop-color="${config.colorBlue}"/>
                         <stop offset="75%" stop-color="${config.colorBlue}"/>
-                        <stop offset="60%" stop-color="${config.colorRed}"/>
+                        <stop offset="75%" stop-color="${config.colorRed}"/>
                         <stop offset="100%" stop-color="${config.colorRed}"/>
                     </linearGradient>
 
@@ -196,13 +217,13 @@
                 <circle cx="${cx}" cy="${cy}" r="${r}" stroke="url(#flag)" stroke-width="${config.strokeWidth}" fill="none" />
                 <circle cx="${cx}" cy="${cy}" r="368" stroke="${config.colorYellow}" stroke-width="5" fill="none" />
 
-                 <text fill="${config.colorBlue}" font-family="${fontStack}" font-weight="200" font-size="${config.fontSize}" letter-spacing="1" dy="3">
+                 <text fill="${config.colorBlue}" font-family="${fontStack}" font-weight="200" font-size="${config.fontSize}" letter-spacing="1" dy="5">
                     <textPath href="#topCurve" startOffset="50%" text-anchor="middle" dominant-baseline="middle">
                         ${config.topText}
                     </textPath>
                 </text>
 
-                <text fill="${config.colorYellow}" font-family="${fontStack}" font-weight="200" font-size="${config.fontSize}" letter-spacing="1" dy="2">
+                <text fill="${config.colorYellow}" font-family="${fontStack}" font-weight="200" font-size="${config.fontSize}" letter-spacing="1" dy="3">
                     <textPath href="#bottomCurve" startOffset="50%" text-anchor="middle" dominant-baseline="middle">
                         ${config.bottomText}
                     </textPath>
@@ -235,22 +256,17 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Llenar el fondo completo con blanco
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Clip circular para recortar lo de afuera
             ctx.save();
             ctx.beginPath();
             ctx.arc(canvas.width/2, canvas.height/2, canvas.width/2, 0, Math.PI * 2);
             ctx.clip();
 
-            // 1. DIBUJAR FOTO DEL USUARIO (en el centro)
             if (userImage) {
                 ctx.save();
                 ctx.beginPath();
-                // Radio ajustado para que la foto no tape el aro azul delgado interior
                 ctx.arc(config.canvasSize/2, config.canvasSize/2, 268, 0, Math.PI * 2);
                 ctx.clip();
                 const imgW = userImage.width * photoState.scale;
@@ -266,7 +282,6 @@
                 ctx.fill();
             }
 
-            // 2. DIBUJAR MARCO (SVG)
             if (frameImage.complete) {
                 ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
             }
@@ -317,12 +332,11 @@
 
         downloadBtn.addEventListener('click', () => {
             const link = document.createElement('a');
-            link.download = 'mi_foto_campaña.png';
+            link.download = 'fajardo_presidente.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
 
-        // Inicializar el marco apenas cargue el código
         createSVGFrame();
     </script>
 </body>
